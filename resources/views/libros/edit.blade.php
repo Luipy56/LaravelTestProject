@@ -8,7 +8,7 @@
         body { font-family: Arial, sans-serif; margin: 20px; max-width: 600px; }
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; }
-        input[type="text"], select { width: 100%; padding: 8px; box-sizing: border-box; }
+        input[type="text"], select, input[type="file"] { width: 100%; padding: 8px; box-sizing: border-box; }
         .btn { padding: 10px 20px; text-decoration: none; border-radius: 4px; border: none; cursor: pointer; }
         .btn-primary { background-color: #007bff; color: white; }
         .btn-secondary { background-color: #6c757d; color: white; }
@@ -18,7 +18,7 @@
 <body>
     <h1>Editar Libro</h1>
     
-    <form method="POST" action="{{ route('libros.update', $libro->id) }}">
+    <form method="POST" action="{{ route('libros.update', $libro->id) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         
@@ -49,6 +49,17 @@
                 @endforeach
             </select>
             @error('biblioteca_id')
+                <div class="error">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="form-group">
+            <label for="file">Archivo:</label>
+            <input type="file" id="file" name="file" accept="*/*">
+            @if($libro->file_path)
+                <p style="margin-top: 5px; color: #666;">Archivo actual: <a href="{{ route('libros.download', $libro->id) }}" target="_blank">Descargar</a></p>
+            @endif
+            @error('file')
                 <div class="error">{{ $message }}</div>
             @enderror
         </div>

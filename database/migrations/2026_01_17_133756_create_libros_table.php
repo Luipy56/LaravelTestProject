@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('author');
             $table->foreignId('biblioteca_id')->constrained('bibliotecas')->onDelete('cascade');
+            $table->string('file_path')->nullable();
             $table->timestamps();
         });
     }

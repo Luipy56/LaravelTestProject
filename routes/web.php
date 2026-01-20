@@ -15,4 +15,5 @@ Route::middleware('auth')->group(function () {
     });
     Route::resource('bibliotecas', BibliotecasController::class);
     Route::resource('libros', LibrosController::class);
+    Route::get('libros/{id}/download', [LibrosController::class, 'download'])->name('libros.download');
 });
