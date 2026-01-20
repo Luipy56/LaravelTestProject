@@ -2,23 +2,21 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\BibliotecasController;
-use App\Http\Controllers\LibrosController;
+use App\Http\Controllers\EsdevenimentsController;
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Public routes (no authentication required)
-Route::get('/public', [BibliotecasController::class, 'publicIndex'])->name('public.index');
-Route::get('/public/bibliotecas/{id}', [BibliotecasController::class, 'publicShow'])->name('public.bibliotecas.show');
+Route::get('/esdeveniments', [EsdevenimentsController::class, 'publicIndex'])->name('esdeveniments.index');
+Route::get('/inscripcions/create', [EsdevenimentsController::class, 'createInscripcio'])->name('inscripcions.create');
+Route::post('/inscripcions', [EsdevenimentsController::class, 'storeInscripcio'])->name('inscripcions.store');
 
-Route::middleware('auth')->group(function () {
+Route::middleware('usuari.admin')->group(function () {
     Route::get('/', function () {
-        return redirect()->route('bibliotecas.index');
+        return redirect()->route('inscripcions.index');
     });
-    Route::resource('bibliotecas', BibliotecasController::class);
-    Route::get('bibliotecas/{id}/export-libros', [BibliotecasController::class, 'exportLibros'])->name('bibliotecas.export-libros');
-    Route::resource('libros', LibrosController::class);
-    Route::get('libros/{id}/download', [LibrosController::class, 'download'])->name('libros.download');
+    Route::get('inscripcions', [EsdevenimentsController::class, 'inscripcions'])->name('inscripcions.index');
+    Route::get('inscripcions/{id}/download', [EsdevenimentsController::class, 'downloadFitxer'])->name('inscripcions.download');
 });

@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Usuaris_admin;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -14,24 +15,29 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+        $credentials = [
+            'usuari' => $request->input('usuari'),
+            'contraseña' => $request->input('contraseña'),
+        ];
 
-        if (Auth::attempt($credentials, $request->filled('remember'))) {
+        $usuari = Usuaris_admin::where('usuari', $credentials['usuari'])->first();
+
+        if ($usuari && $usuari->contraseña === $credentials['contraseña']) {
             $request->session()->regenerate();
-            return redirect()->intended('/');
+            $request->session()->put('usuari_admin_id', $usuari->id);
+            $request->session()->put('usuari_admin_nom', $usuari->usuari);
+            return redirect()->route('inscripcions.index');
         }
 
         return back()->withErrors([
-            'email' => 'Las credenciales proporcionadas no coinciden con nuestros registros.',
-        ])->onlyInput('email');
+            'usuari' => 'Las credenciales proporcionadas no coinciden con nuestros registros.',
+        ])->onlyInput('usuari');
     }
 
     public function logout(Request $request)
     {
-        Auth::logout();
+        $request->session()->forget('usuari_admin_id');
+        $request->session()->forget('usuari_admin_nom');
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/login');
