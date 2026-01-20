@@ -65,7 +65,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Actualizar</button>
-        <a href="{{ route('bibliotecas.index') }}" class="btn btn-secondary">Cancelar</a>
+        <a href="{{ route('bibliotecas.show', $libro->biblioteca_id) }}" class="btn btn-secondary">Cancelar</a>
     </form>
 </body>
 </html>

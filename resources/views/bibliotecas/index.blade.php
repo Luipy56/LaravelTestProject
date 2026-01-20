@@ -48,7 +48,7 @@
                     <td>{{ $biblioteca->name }}</td>
                     <td>{{ $biblioteca->address }}</td>
                     <td>
-                        <a href="{{ route('libros.show', $biblioteca->id) }}" class="btn btn-success">Ver Libros</a>
+                        <a href="{{ route('bibliotecas.show', $biblioteca->id) }}" class="btn btn-success">Ver Libros</a>
                         <a href="{{ route('bibliotecas.edit', $biblioteca->id) }}" class="btn btn-warning">Editar</a>
                         <form method="POST" action="{{ route('bibliotecas.destroy', $biblioteca->id) }}" style="display: inline;">
                             @csrf

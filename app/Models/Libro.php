@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Libro extends Model
 {
-    protected $fillable = ['title', 'author', 'biblioteca_id', 'file_path'];
+    protected $fillable = ['title', 'author', 'biblioteca_id', 'file_path', 'original_file_name'];
 
     public function biblioteca()
     {

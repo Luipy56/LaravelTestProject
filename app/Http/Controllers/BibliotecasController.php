@@ -31,7 +31,7 @@ class BibliotecasController extends Controller
 
     public function show(string $id)
     {
-        $biblioteca = Biblioteca::findOrFail($id);
+        $biblioteca = Biblioteca::with('libros')->findOrFail($id);
         return view('bibliotecas.show', compact('biblioteca'));
     }
 

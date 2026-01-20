@@ -21,7 +21,7 @@
 <body>
     <div class="header">
         <h1>Detalle del Libro</h1>
-        <a href="{{ route('libros.index') }}" class="btn btn-secondary">Volver a Libros</a>
+        <a href="{{ route('bibliotecas.show', $libro->biblioteca_id) }}" class="btn btn-secondary">Volver a Biblioteca</a>
     </div>
 
     <div class="detail-section">

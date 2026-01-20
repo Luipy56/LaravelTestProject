@@ -11,14 +11,14 @@ class LibrosController extends Controller
 {
     public function index()
     {
-        $libros = Libro::with('biblioteca')->get();
-        return view('libros.index', compact('libros'));
+        return redirect()->route('bibliotecas.index');
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $bibliotecas = Biblioteca::all();
-        return view('libros.create', compact('bibliotecas'));
+        $selectedBibliotecaId = $request->query('biblioteca_id');
+        return view('libros.create', compact('bibliotecas', 'selectedBibliotecaId'));
     }
 
     public function store(Request $request)
@@ -34,13 +34,15 @@ class LibrosController extends Controller
         
         if ($request->hasFile('file')) {
             $file = $request->file('file');
-            $fileName = time() . '_' . $file->getClientOriginalName();
+            $originalFileName = $file->getClientOriginalName();
+            $fileName = time() . '_' . $originalFileName;
             $filePath = $file->storeAs('libros', $fileName, 'public');
             $data['file_path'] = $filePath;
+            $data['original_file_name'] = $originalFileName;
         }
 
-        Libro::create($data);
-        return redirect()->route('libros.index')->with('success', 'Libro creado exitosamente');
+        $libro = Libro::create($data);
+        return redirect()->route('bibliotecas.show', $libro->biblioteca_id)->with('success', 'Libro creado exitosamente');
     }
 
     public function show(string $id)
@@ -74,18 +76,21 @@ class LibrosController extends Controller
             }
             
             $file = $request->file('file');
-            $fileName = time() . '_' . $file->getClientOriginalName();
+            $originalFileName = $file->getClientOriginalName();
+            $fileName = time() . '_' . $originalFileName;
             $filePath = $file->storeAs('libros', $fileName, 'public');
             $data['file_path'] = $filePath;
+            $data['original_file_name'] = $originalFileName;
         }
 
         $libro->update($data);
-        return redirect()->route('libros.index')->with('success', 'Libro actualizado exitosamente');
+        return redirect()->route('bibliotecas.show', $libro->biblioteca_id)->with('success', 'Libro actualizado exitosamente');
     }
 
     public function destroy(string $id)
     {
         $libro = Libro::findOrFail($id);
+        $bibliotecaId = $libro->biblioteca_id;
         
         // Delete associated file if exists
         if ($libro->file_path && Storage::disk('public')->exists($libro->file_path)) {
@@ -93,7 +98,7 @@ class LibrosController extends Controller
         }
         
         $libro->delete();
-        return redirect()->route('libros.index')->with('success', 'Libro eliminado exitosamente');
+        return redirect()->route('bibliotecas.show', $bibliotecaId)->with('success', 'Libro eliminado exitosamente');
     }
 
     public function download(string $id)
@@ -104,6 +109,8 @@ class LibrosController extends Controller
             return redirect()->route('libros.show', $id)->with('error', 'El archivo no existe');
         }
         
-        return Storage::disk('public')->download($libro->file_path);
+        $downloadName = $libro->original_file_name ?? basename($libro->file_path);
+        
+        return Storage::disk('public')->download($libro->file_path, $downloadName);
     }
 }

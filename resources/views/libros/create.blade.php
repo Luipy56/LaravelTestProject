@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Libro</title>
+    <title>@if(isset($selectedBibliotecaId))Crear libro en biblioteca {{ $bibliotecas->find($selectedBibliotecaId)->name ?? '' }}@else Crear Libro @endif</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; max-width: 600px; }
         .form-group { margin-bottom: 15px; }
@@ -16,7 +16,7 @@
     </style>
 </head>
 <body>
-    <h1>Crear Libro</h1>
+    <h1>@if(isset($selectedBibliotecaId))Crear libro en biblioteca {{ $bibliotecas->find($selectedBibliotecaId)->name ?? '' }}@else Crear Libro @endif</h1>
     
     <form method="POST" action="{{ route('libros.store') }}" enctype="multipart/form-data">
         @csrf
@@ -37,20 +37,24 @@
             @enderror
         </div>
 
-        <div class="form-group">
-            <label for="biblioteca_id">Biblioteca:</label>
-            <select id="biblioteca_id" name="biblioteca_id" required>
-                <option value="">Seleccione una biblioteca</option>
-                @foreach($bibliotecas as $biblioteca)
-                    <option value="{{ $biblioteca->id }}" {{ old('biblioteca_id') == $biblioteca->id ? 'selected' : '' }}>
-                        {{ $biblioteca->name }}
-                    </option>
-                @endforeach
-            </select>
-            @error('biblioteca_id')
-                <div class="error">{{ $message }}</div>
-            @enderror
-        </div>
+        @if(isset($selectedBibliotecaId))
+            <input type="hidden" name="biblioteca_id" value="{{ $selectedBibliotecaId }}">
+        @else
+            <div class="form-group">
+                <label for="biblioteca_id">Biblioteca:</label>
+                <select id="biblioteca_id" name="biblioteca_id" required>
+                    <option value="">Seleccione una biblioteca</option>
+                    @foreach($bibliotecas as $biblioteca)
+                        <option value="{{ $biblioteca->id }}" {{ old('biblioteca_id') == $biblioteca->id ? 'selected' : '' }}>
+                            {{ $biblioteca->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('biblioteca_id')
+                    <div class="error">{{ $message }}</div>
+                @enderror
+            </div>
+        @endif
 
         <div class="form-group">
             <label for="file">Archivo:</label>
@@ -61,7 +65,11 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Guardar</button>
-        <a href="{{ route('bibliotecas.index') }}" class="btn btn-secondary">Cancelar</a>
+        @if(isset($selectedBibliotecaId))
+            <a href="{{ route('bibliotecas.show', $selectedBibliotecaId) }}" class="btn btn-secondary">Cancelar</a>
+        @else
+            <a href="{{ route('bibliotecas.index') }}" class="btn btn-secondary">Cancelar</a>
+        @endif
     </form>
 </body>
 </html>
