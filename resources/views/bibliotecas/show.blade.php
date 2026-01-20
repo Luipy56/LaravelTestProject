@@ -23,6 +23,7 @@
         <h1>Libros de {{ $biblioteca->name }}</h1>
         <p><strong>Dirección:</strong> {{ $biblioteca->address }}</p>
         <a href="{{ route('libros.create', ['biblioteca_id' => $biblioteca->id]) }}" class="btn btn-primary">Agregar Libro</a>
+        <a href="{{ route('bibliotecas.export-libros', ['id' => $biblioteca->id, 'search' => $search ?? '']) }}" class="btn btn-success">Exportar Lista</a>
         <a href="{{ route('bibliotecas.index') }}" class="btn btn-secondary">Volver a Bibliotecas</a>
     </div>
 

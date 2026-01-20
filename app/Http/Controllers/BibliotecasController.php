@@ -70,4 +70,41 @@ class BibliotecasController extends Controller
         $biblioteca->delete();
         return redirect()->route('bibliotecas.index')->with('success', 'Biblioteca eliminada exitosamente');
     }
+
+    public function exportLibros(Request $request, string $id)
+    {
+        $biblioteca = Biblioteca::findOrFail($id);
+        $search = $request->query('search');
+        
+        $libros = $biblioteca->libros()
+            ->when($search, function ($query, $search) {
+                return $query->where('title', 'like', "%{$search}%")
+                             ->orWhere('author', 'like', "%{$search}%");
+            })
+            ->get();
+        
+        $filename = 'libros_' . $biblioteca->name . '_' . date('Y-m-d') . '.csv';
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ];
+        
+        $callback = function() use ($libros) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, ['ID', 'Título', 'Autor', 'Archivo']);
+            
+            foreach ($libros as $libro) {
+                fputcsv($file, [
+                    $libro->id,
+                    $libro->title,
+                    $libro->author,
+                    $libro->file_path ? 'Sí' : 'No'
+                ]);
+            }
+            
+            fclose($file);
+        };
+        
+        return response()->stream($callback, 200, $headers);
+    }
 }

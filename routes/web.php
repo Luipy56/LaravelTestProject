@@ -14,6 +14,7 @@ Route::middleware('auth')->group(function () {
         return redirect()->route('bibliotecas.index');
     });
     Route::resource('bibliotecas', BibliotecasController::class);
+    Route::get('bibliotecas/{id}/export-libros', [BibliotecasController::class, 'exportLibros'])->name('bibliotecas.export-libros');
     Route::resource('libros', LibrosController::class);
     Route::get('libros/{id}/download', [LibrosController::class, 'download'])->name('libros.download');
 });
