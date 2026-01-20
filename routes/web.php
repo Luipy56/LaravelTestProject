@@ -9,6 +9,10 @@ Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// Public routes (no authentication required)
+Route::get('/public', [BibliotecasController::class, 'publicIndex'])->name('public.index');
+Route::get('/public/bibliotecas/{id}', [BibliotecasController::class, 'publicShow'])->name('public.bibliotecas.show');
+
 Route::middleware('auth')->group(function () {
     Route::get('/', function () {
         return redirect()->route('bibliotecas.index');

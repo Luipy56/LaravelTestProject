@@ -107,4 +107,27 @@ class BibliotecasController extends Controller
         
         return response()->stream($callback, 200, $headers);
     }
+
+    public function publicIndex()
+    {
+        $bibliotecas = Biblioteca::all();
+        return view('bibliotecas.public-index', compact('bibliotecas'));
+    }
+
+    public function publicShow(Request $request, string $id)
+    {
+        $biblioteca = Biblioteca::findOrFail($id);
+        $search = $request->query('search');
+        
+        $libros = $biblioteca->libros()
+            ->when($search, function ($query, $search) {
+                return $query->where('title', 'like', "%{$search}%")
+                             ->orWhere('author', 'like', "%{$search}%");
+            })
+            ->get();
+        
+        $biblioteca->setRelation('libros', $libros);
+        
+        return view('bibliotecas.public-show', compact('biblioteca', 'search'));
+    }
 }
