@@ -29,10 +29,21 @@ class BibliotecasController extends Controller
         return redirect()->route('bibliotecas.index')->with('success', 'Biblioteca creada exitosamente');
     }
 
-    public function show(string $id)
+    public function show(Request $request, string $id)
     {
-        $biblioteca = Biblioteca::with('libros')->findOrFail($id);
-        return view('bibliotecas.show', compact('biblioteca'));
+        $biblioteca = Biblioteca::findOrFail($id);
+        $search = $request->query('search');
+        
+        $libros = $biblioteca->libros()
+            ->when($search, function ($query, $search) {
+                return $query->where('title', 'like', "%{$search}%")
+                             ->orWhere('author', 'like', "%{$search}%");
+            })
+            ->get();
+        
+        $biblioteca->setRelation('libros', $libros);
+        
+        return view('bibliotecas.show', compact('biblioteca', 'search'));
     }
 
     public function edit(string $id)

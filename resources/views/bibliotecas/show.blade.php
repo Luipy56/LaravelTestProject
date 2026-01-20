@@ -26,6 +26,16 @@
         <a href="{{ route('bibliotecas.index') }}" class="btn btn-secondary">Volver a Bibliotecas</a>
     </div>
 
+    <div style="margin-bottom: 20px;">
+        <form method="GET" action="{{ route('bibliotecas.show', $biblioteca->id) }}">
+            <input type="text" name="search" placeholder="Buscar por título o autor..." value="{{ $search ?? '' }}" style="padding: 8px; width: 300px;">
+            <button type="submit" style="padding: 8px 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Buscar</button>
+            @if($search ?? false)
+                <a href="{{ route('bibliotecas.show', $biblioteca->id) }}" class="btn btn-secondary" style="margin-left: 10px;">Limpiar</a>
+            @endif
+        </form>
+    </div>
+
     <table>
         <thead>
             <tr>
@@ -61,7 +71,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5">No hay libros en esta biblioteca</td>
+                    <td colspan="5">No hay libros{{ $search ?? false ? ' que coincidan con la búsqueda' : ' en esta biblioteca' }}</td>
                 </tr>
             @endforelse
         </tbody>

@@ -11,6 +11,7 @@ class LibrosController extends Controller
 {
     public function index()
     {
+        // NOT USED
         return redirect()->route('bibliotecas.index');
     }
 
