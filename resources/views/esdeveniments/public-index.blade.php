@@ -9,10 +9,6 @@
     <h1>Eventos Públicos</h1>
     <a href="{{ route('login') }}">Iniciar Sesión</a>
 
-    @if(session('success'))
-        <p>{{ session('success') }}</p>
-    @endif
-
     <table border='1'>
         <thead>
             <tr>
@@ -23,13 +19,13 @@
             </tr>
         </thead>
         <tbody>
-            @forelse($esdeveniments as $esdeveniment)
+            @forelse($eventos as $evento)
                 <tr>
-                    <td>{{ $esdeveniment->nom }}</td>
-                    <td>{{ $esdeveniment->data }}</td>
-                    <td>{{ Str::limit($esdeveniment->descripcio, 100) }}</td>
+                    <td>{{ $evento->nom }}</td>
+                    <td>{{ $evento->data }}</td>
+                    <td>{{ Str::limit($evento->descripcio, 100) }}</td>
                     <td>
-                        <a href="{{ route('inscripcions.create', ['esdeveniment' => $esdeveniment->id]) }}">Inscribirse</a>
+                        <a href="{{ route('inscripcions.create', ['esdeveniment' => $evento->id]) }}">Inscribirse</a>
                     </td>
                 </tr>
             @empty

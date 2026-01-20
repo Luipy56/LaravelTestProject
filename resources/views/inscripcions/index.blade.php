@@ -8,20 +8,20 @@
 <body>
     <h1>Inscripciones Realizadas</h1>
     
-    <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Cerrar Sesión</a>
-    <form id="logout-form" action="{{ route('logout') }}" method="POST">
+    <form action="{{ route('logout') }}" method="POST">
         @csrf
+        <button type="submit">Cerrar Sesión</button>
     </form>
     
     <h2>Filtros</h2>
     <form method="GET" action="{{ route('inscripcions.index') }}">
         <div>
             <label for="nom_esdeveniment">Nombre Evento:</label>
-            <input type="text" id="nom_esdeveniment" name="nom_esdeveniment" value="{{ $nomEsdeveniment ?? '' }}">
+            <input type="text" id="nom_esdeveniment" name="nom_esdeveniment" value="{{ $nombreEvento ?? '' }}">
         </div>
         <div>
             <label for="data">Fecha:</label>
-            <input type="date" id="data" name="data" value="{{ $data ?? '' }}">
+            <input type="date" id="data" name="data" value="{{ $fecha ?? '' }}">
         </div>
         <div>
             <button type="submit">Filtrar</button>
@@ -41,14 +41,14 @@
             </tr>
         </thead>
         <tbody>
-            @forelse($inscripcions as $inscripcio)
+            @forelse($inscripciones as $inscripcion)
                 <tr>
-                    <td>{{ $inscripcio->id }}</td>
-                    <td>{{ $inscripcio->nom }}</td>
-                    <td>{{ $inscripcio->email }}</td>
-                    <td><a href="{{ route('inscripcions.download', $inscripcio->id) }}">{{ $inscripcio->fitxer }}</a></td>
-                    <td>{{ $inscripcio->esdeveniment->nom ?? 'N/A' }}</td>
-                    <td>{{ $inscripcio->esdeveniment->data ?? 'N/A' }}</td>
+                    <td>{{ $inscripcion->id }}</td>
+                    <td>{{ $inscripcion->nom }}</td>
+                    <td>{{ $inscripcion->email }}</td>
+                    <td><a href="{{ route('inscripcions.download', $inscripcion->id) }}">{{ $inscripcion->fitxer }}</a></td>
+                    <td>{{ $inscripcion->esdeveniment->nom ?? 'nose' }}</td>
+                    <td>{{ $inscripcion->esdeveniment->data ?? 'nos' }}</td>
                 </tr>
             @empty
                 <tr>

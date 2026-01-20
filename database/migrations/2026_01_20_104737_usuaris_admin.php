@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('usuari', 50);
             $table->string('contraseña', 255);
+            $table->timestamps();
         });
     }
 

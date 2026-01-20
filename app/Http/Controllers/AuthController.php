@@ -20,12 +20,12 @@ class AuthController extends Controller
             'contraseña' => $request->input('contraseña'),
         ];
 
-        $usuari = Usuaris_admin::where('usuari', $credentials['usuari'])->first();
+        $usuario = Usuaris_admin::where('usuari', $credentials['usuari'])->first();
 
-        if ($usuari && $usuari->contraseña === $credentials['contraseña']) {
+        if ($usuario && $usuario->contraseña === $credentials['contraseña']) {
             $request->session()->regenerate();
-            $request->session()->put('usuari_admin_id', $usuari->id);
-            $request->session()->put('usuari_admin_nom', $usuari->usuari);
+            $request->session()->put('usuari_admin_id', $usuario->id);
+            $request->session()->put('usuari_admin_nom', $usuario->usuari);
             return redirect()->route('inscripcions.index');
         }
 
